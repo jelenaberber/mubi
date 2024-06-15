@@ -9,35 +9,26 @@
                 </div>
             </div>
             <div class="row posts-entry">
-                <div class="col-lg-8 d-flex flex-wrap justify-content-between" id="movies">
-                    @foreach($movies as $movie)
-                        <div class="movie blog-entry d-flex flex-wrap blog-entry-search-item col-6">
-                            <a href="{{ route('movie', ['movie_id' => $movie->id]) }}" class="img-link me-5">
-                                <img src="{{ asset('/assets/images/'.$movie->img_max) }}" alt="Image" class="img-fluid">
-                            </a>
-                            <div class="col-12">
-                                <span class="date">{{ $movie->year }}<a href="#"></a></span>
-                                <h2><a href="{{ route('movie', ['movie_id' => $movie->id]) }}">{{ $movie->name }}</a></h2>
-                                <h2 class="h5"><a href="{{ route('movie', ['movie_id' => $movie->id]) }}" class="h6">{{ $movie->original_name }}</a></h2>
+                <div class="col-lg-8 d-flex flex-wrap justify-content-between">
+                    <div class="col-12 d-flex flex-wrap justify-content-between" id="movies">
+                        @foreach($movies as $movie)
+                            <div class="movie blog-entry d-flex flex-wrap blog-entry-search-item col-6">
+                                <a href="{{ route('movie', ['movie_id' => $movie->id]) }}" class="img-link me-5">
+                                    <img src="{{ asset('/assets/images/'.$movie->img_max) }}" alt="Image" class="img-fluid">
+                                </a>
+                                <div class="col-12">
+                                    <span class="date">{{ $movie->year }}<a href="#"></a></span>
+                                    <h2><a href="{{ route('movie', ['movie_id' => $movie->id]) }}">{{ $movie->name }}</a></h2>
+                                    <h2 class="h5"><a href="{{ route('movie', ['movie_id' => $movie->id]) }}" class="h6">{{ $movie->original_name }}</a></h2>
+                                </div>
                             </div>
-                        </div>
-                    @endforeach
-
-
-                    <div class="row text-start pt-5 border-top col-12">
-                        <div class="col-md-12 d-flex justify-content-center">
-                            <div class="custom-pagination">
-                                <span>1</span>
-                                <a href="#">2</a>
-                                <a href="#">3</a>
-                                <a href="#">4</a>
-                                <span>...</span>
-                                <a href="#">15</a>
-                            </div>
-                        </div>
+                        @endforeach
                     </div>
-
+                    <div class="col-12 pagination">
+                        {{ $movies->links() }}
+                    </div>
                 </div>
+
 
                 <div class="col-lg-4 sidebar">
 

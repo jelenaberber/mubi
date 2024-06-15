@@ -3,6 +3,9 @@
 @section('content')
     <div class="site-cover site-cover-sm same-height overlay single-page d-flex align-items-end" style="background-image: url('{{asset('/assets/images/'.$movie->img_max)}}')">
         <div class="container">
+            <div class="col-12 d-flex justify-content-end align-items-start" id="rating">
+                <i class="fa-regular fa-star icon-white fs-3"></i> {{ $rate }}/5
+            </div>
             <div class="row same-height justify-content-between col-12">
                 <div class="col-md-12 d-flex justify-content-start align-items-end">
                     <div class="post-entry text-start col-3">
@@ -20,11 +23,17 @@
                             <br/><span><i class="fa-solid fa-clock"></i> {{ $movie->duration }}'</span>
                             <span class="mx-2"><i class="fa-solid fa-volume-high"></i> {{ $movie->language }}</span>
                             <span class="line my-2"></span>
-                            <div class="col-3 d-flex justify-content-between">
-                                <a href="#" title="Rate and review"><i class="fa-regular fa-star icon-white fs-3"></i></a>
-                                <a href="#" title="Add to Watchlist"><i class="fa-solid fa-list-ul icon-white fs-3"></i></a>
-                            </div>
+                            @if(session()->get('user'))
+                                <div class="col-3 d-flex justify-content-between">
+                                    <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo" class="btn btn-link" title="Rate and review" id="rateReview"><i class="fa-regular fa-star icon-white fs-3"></i></button>
+                                    @if($exists)
+                                        <button title="Remove from Watchlist" class="btn btn-link rounded-circle" id="watchlist"  data-id="{{ $movie->movie_id }}"><i class="fa-solid fa-check icon-white fs-3"></i></button>
 
+                                    @else
+                                        <button title="Add to Watchlist" id="watchlist" class="btn btn-link"  data-id="{{ $movie->movie_id }}"><i class="fa-solid fa-list-ul icon-white fs-3"></i></button>
+                                    @endif
+                                </div>
+                            @endif
                         </div>
                     </div>
                     <div class="post-content-body col-9 d-flex flex-wrap mx-3">
@@ -70,218 +79,78 @@
                         </div>
                     </div>
                     <div class="pt-5 comment-wrap">
-                        <h3 class="mb-5 heading">6 Comments</h3>
+                    @if($reviews != null)
+                        <h3 class="mb-5 heading">{{ count($reviews) }} Reviews</h3>
                         <ul class="comment-list">
-                            <li class="comment">
+                            @foreach($reviews as $r)
+                            <li class="comment" data-id="{{ $r->comment_id }}">
                                 <div class="vcard">
-                                    <img src="images/person_1.jpg" alt="Image placeholder">
+                                    <img src="{{asset('/assets/images/'.$r->profile_img)}}" alt="Image placeholder">
                                 </div>
                                 <div class="comment-body">
-                                    <h3>Jean Doe</h3>
-                                    <div class="meta">January 9, 2018 at 2:21pm</div>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Pariatur quidem laborum necessitatibus, ipsam impedit vitae autem, eum officia, fugiat saepe enim sapiente iste iure! Quam voluptas earum impedit necessitatibus, nihil?</p>
-                                    <p><a href="#" class="reply rounded">Reply</a></p>
-                                </div>
-                            </li>
-
-                            <li class="comment">
-                                <div class="vcard">
-                                    <img src="images/person_2.jpg" alt="Image placeholder">
-                                </div>
-                                <div class="comment-body">
-                                    <h3>Jean Doe</h3>
-                                    <div class="meta">January 9, 2018 at 2:21pm</div>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Pariatur quidem laborum necessitatibus, ipsam impedit vitae autem, eum officia, fugiat saepe enim sapiente iste iure! Quam voluptas earum impedit necessitatibus, nihil?</p>
-                                    <p><a href="#" class="reply rounded">Reply</a></p>
-                                </div>
-
-                                <ul class="children">
-                                    <li class="comment">
-                                        <div class="vcard">
-                                            <img src="images/person_3.jpg" alt="Image placeholder">
+                                    <div class="d-flex justify-content-between col-4">
+                                        <h3>{{$r->first_name}} {{$r->last_name}}</h3>
+                                        <div class="d-flex justify-content-start col-8">
+                                            @for ($i = 1; $i <= 5; $i++)
+                                                <i class="fa-regular mx-1 fa-star fs-3 {{ $i <= $r->rate ? ' yellow' : '' }}" data-star="1"></i>
+                                            @endfor
                                         </div>
-                                        <div class="comment-body">
-                                            <h3>Jean Doe</h3>
-                                            <div class="meta">January 9, 2018 at 2:21pm</div>
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Pariatur quidem laborum necessitatibus, ipsam impedit vitae autem, eum officia, fugiat saepe enim sapiente iste iure! Quam voluptas earum impedit necessitatibus, nihil?</p>
-                                            <p><a href="#" class="reply rounded">Reply</a></p>
-                                        </div>
-
-
-                                        <ul class="children">
-                                            <li class="comment">
-                                                <div class="vcard">
-                                                    <img src="images/person_4.jpg" alt="Image placeholder">
-                                                </div>
-                                                <div class="comment-body">
-                                                    <h3>Jean Doe</h3>
-                                                    <div class="meta">January 9, 2018 at 2:21pm</div>
-                                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Pariatur quidem laborum necessitatibus, ipsam impedit vitae autem, eum officia, fugiat saepe enim sapiente iste iure! Quam voluptas earum impedit necessitatibus, nihil?</p>
-                                                    <p><a href="#" class="reply rounded">Reply</a></p>
-                                                </div>
-
-                                                <ul class="children">
-                                                    <li class="comment">
-                                                        <div class="vcard">
-                                                            <img src="images/person_5.jpg" alt="Image placeholder">
-                                                        </div>
-                                                        <div class="comment-body">
-                                                            <h3>Jean Doe</h3>
-                                                            <div class="meta">January 9, 2018 at 2:21pm</div>
-                                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Pariatur quidem laborum necessitatibus, ipsam impedit vitae autem, eum officia, fugiat saepe enim sapiente iste iure! Quam voluptas earum impedit necessitatibus, nihil?</p>
-                                                            <p><a href="#" class="reply rounded">Reply</a></p>
-                                                        </div>
-                                                    </li>
-                                                </ul>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </li>
-
-                            <li class="comment">
-                                <div class="vcard">
-                                    <img src="images/person_1.jpg" alt="Image placeholder">
-                                </div>
-                                <div class="comment-body">
-                                    <h3>Jean Doe</h3>
-                                    <div class="meta">January 9, 2018 at 2:21pm</div>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Pariatur quidem laborum necessitatibus, ipsam impedit vitae autem, eum officia, fugiat saepe enim sapiente iste iure! Quam voluptas earum impedit necessitatibus, nihil?</p>
-                                    <p><a href="#" class="reply rounded">Reply</a></p>
+                                        @if(session()->get('user') && session()->get('user')->id == $r->user_id)
+                                            <button class="btn text-danger p-0 delete-review" value="{{ $r->comment_id }}" data-movie="{{ $movie->movie_id }}">Delete</button>
+                                        @endif
+                                    </div>
+                                    <div class="meta">{{ $r->created_at }}</div>
+                                    <p>{{$r->text}}</p>
                                 </div>
                             </li>
+                            @endforeach
                         </ul>
-                        <!-- END comment-list -->
-
-                        <div class="comment-form-wrap pt-5">
-                            <h3 class="mb-5">Leave a comment</h3>
-                            <form action="#" class="p-5 bg-light">
-                                <div class="form-group">
-                                    <label for="name">Name *</label>
-                                    <input type="text" class="form-control" id="name">
-                                </div>
-                                <div class="form-group">
-                                    <label for="email">Email *</label>
-                                    <input type="email" class="form-control" id="email">
-                                </div>
-                                <div class="form-group">
-                                    <label for="website">Website</label>
-                                    <input type="url" class="form-control" id="website">
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="message">Message</label>
-                                    <textarea name="" id="message" cols="30" rows="10" class="form-control"></textarea>
-                                </div>
-                                <div class="form-group">
-                                    <input type="submit" value="Post Comment" class="btn btn-primary">
-                                </div>
-
-                            </form>
-                        </div>
+                    @endif
+                        @if(!session()->get('user'))
+                            <h3 class="mb-5 fs-5">If you want to leave review you need to <a href="{{ route('logIn') }}">log in</a></h3>
+                        @endif
                     </div>
 
                 </div>
 
-                <!-- END main-content -->
-
-                <div class="col-md-12 col-lg-4 sidebar">
-
-                    <div class="sidebar-box">
-                        <h3 class="heading">Popular Posts</h3>
-                        <div class="post-entry-sidebar">
-                            <ul>
-                                <li>
-                                    <a href="">
-                                        <img src="images/img_1_sq.jpg" alt="Image placeholder" class="me-4 rounded">
-                                        <div class="text">
-                                            <h4>There’s a Cool New Way for Men to Wear Socks and Sandals</h4>
-                                            <div class="post-meta">
-                                                <span class="mr-2">March 15, 2018 </span>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="">
-                                        <img src="images/img_2_sq.jpg" alt="Image placeholder" class="me-4 rounded">
-                                        <div class="text">
-                                            <h4>There’s a Cool New Way for Men to Wear Socks and Sandals</h4>
-                                            <div class="post-meta">
-                                                <span class="mr-2">March 15, 2018 </span>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="">
-                                        <img src="images/img_3_sq.jpg" alt="Image placeholder" class="me-4 rounded">
-                                        <div class="text">
-                                            <h4>There’s a Cool New Way for Men to Wear Socks and Sandals</h4>
-                                            <div class="post-meta">
-                                                <span class="mr-2">March 15, 2018 </span>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </section>
 
+    <section id="modal">
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header text-center d-flex flex-wrap">
+                        <h1 class="modal-title fs-5 col-12" id="exampleModalLabel">{{ $movie->movie }}</h1>
+                        <h2 class="modal-title fs-6 col-12" id="exampleModalLabel">{{ $movie->director }}</h2>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="post" id="contactForm">
+                            <div class="mb-3 d-flex justify-content-around">
+                                <label class="col-form-label col-2 text-start">Rate</label>
+                                <div class="d-flex justify-content-start col-8">
+                                    <i class="rate fa-regular mx-1 fa-star fs-3" data-star="1"></i>
+                                    <i class="rate fa-regular mx-1 fa-star fs-3" data-star="2"></i>
+                                    <i class="rate fa-regular mx-1 fa-star fs-3" data-star="3"></i>
+                                    <i class="rate fa-regular mx-1 fa-star fs-3" data-star="4"></i>
+                                    <i class="rate fa-regular mx-1 fa-star fs-3" data-star="5"></i>
 
-    <!-- Start posts-entry -->
-    <section class="section posts-entry posts-entry-sm bg-light">
-        <div class="container">
-            <div class="row mb-4">
-                <div class="col-12 text-uppercase text-black">More Blog Posts</div>
-            </div>
-            <div class="row">
-                <div class="col-md-6 col-lg-3">
-                    <div class="blog-entry">
-                        <a href="single.html" class="img-link">
-                            <img src="images/img_1_horizontal.jpg" alt="Image" class="img-fluid">
-                        </a>
-                        <span class="date">Apr. 14th, 2022</span>
-                        <h2><a href="single.html">Thought you loved Python? Wait until you meet Rust</a></h2>
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-                        <p><a href="#" class="read-more">Continue Reading</a></p>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-3">
-                    <div class="blog-entry">
-                        <a href="single.html" class="img-link">
-                            <img src="images/img_2_horizontal.jpg" alt="Image" class="img-fluid">
-                        </a>
-                        <span class="date">Apr. 14th, 2022</span>
-                        <h2><a href="single.html">Startup vs corporate: What job suits you best?</a></h2>
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-                        <p><a href="#" class="read-more">Continue Reading</a></p>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-3">
-                    <div class="blog-entry">
-                        <a href="single.html" class="img-link">
-                            <img src="images/img_3_horizontal.jpg" alt="Image" class="img-fluid">
-                        </a>
-                        <span class="date">Apr. 14th, 2022</span>
-                        <h2><a href="single.html">UK sees highest inflation in 30 years</a></h2>
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-                        <p><a href="#" class="read-more">Continue Reading</a></p>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-3">
-                    <div class="blog-entry">
-                        <a href="single.html" class="img-link">
-                            <img src="images/img_4_horizontal.jpg" alt="Image" class="img-fluid">
-                        </a>
-                        <span class="date">Apr. 14th, 2022</span>
-                        <h2><a href="single.html">Don’t assume your user data in the cloud is safe</a></h2>
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-                        <p><a href="#" class="read-more">Continue Reading</a></p>
+                                </div>
+                                <input type="hidden" id="movieId" value="{{ $movie->movie_id  }}">
+                            </div>
+                            <p class="text-danger rate-error col-12"></p>
+                            <div class="mb-3">
+                                <label for="message-text" class="col-form-label">Message:</label>
+                                <textarea class="form-control" id="message-text"></textarea>
+                                <p class="text-danger review-error"></p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Send review</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
